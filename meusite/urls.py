@@ -18,16 +18,11 @@ from django.contrib import admin
 from django.urls import path
 from django.shortcuts import render
 from django.core.exceptions import PermissionDenied
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-]
-
-from django.urls import path
-from . import views
+from .  import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path("people/", views.pessoas_list, name="people"),
     path('profile/', views.profile_view, name='profile'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),

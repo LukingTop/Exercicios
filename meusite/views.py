@@ -1,23 +1,31 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.core.mail import send_mail  # opcional, com configuração de EMAIL_*
+from django.core.mail import send_mail 
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.template import loader
+from .models import Post
+from .models import Pessoa
 
 def home(request):
-    # renderiza templates/index.html com contexto mínimo
+
     return render(request, 'index.html', {'user': request.user})
+
+def pessoas_list(request):
+    pessoas = Pessoa.objects.all()
+    return render(request, 'People.html', {'pessoas': pessoas})
 
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        print(f"LOGIN TEST - username: {username!s} password: {password!s}")
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -26,19 +34,13 @@ def login_view(request):
     return render(request, 'Login.html')
 
 def logout_view(request):
-    """
-    Faz logout e exibe uma tela simples de confirmação.
-    - GET/POST: executa logout e mostra template de confirmação.
-    """
+
     logout(request)
     messages.info(request, "Você saiu com sucesso.")
     return render(request, 'Logout.html')
 
 def recover_view(request):
-    """
-    GET: mostra formulário para informar e-mail.
-    POST: tenta localizar usuário e exibe mensagem (envio de e-mail comentado — configure EMAIL_* se quiser enviar).
-    """
+
     if request.method == 'POST':
         email = request.POST.get('email')
         if not email:
@@ -47,9 +49,9 @@ def recover_view(request):
 
         try:
             user = User.objects.get(email=email)
-            messages.success(request, "Se o e-mail existir, enviamos instruções de recuperação.")
+            messages.success(request,)
         except User.DoesNotExist:
-            messages.success(request, "Se o e-mail existir, enviamos instruções de recuperação.")
+            messages.success(request,)
         return render(request, 'Recover.html')
 
     return render(request, 'Recover.html')
@@ -81,7 +83,7 @@ def change_password_view(request):
 
         request.user.set_password(new1)
         request.user.save()
-        update_session_auth_hash(request, request.user)  # mantém o usuário logado
+        update_session_auth_hash(request, request.user)
         messages.success(request, "Senha alterada com sucesso.")
         return redirect('profile')
 
@@ -127,9 +129,6 @@ def register_view(request):
 
 @login_required(login_url='login')
 def profile_view(request):
-    """
-    Página de perfil simples — mostra username, e-mail e links úteis.
-    """
     user = request.user
     context = {
         'user': user,
@@ -140,15 +139,21 @@ def custom_404_view(request, exception):
     return render(request, '404.html', status=404)
 
 def custom_403_view(request, exception=None):
-    """
-    Handler para 403 — renderiza templates/403.html com status 403.
-    """
+
     return render(request, '403.html', status=403)
 
 def custom_500_view(request):
-    """
-    Handler para 500 — renderiza templates/500.html com status 500.
-    """
+
     return render(request, '500.html', status=500)
+
+def testing(request):
+  posts = Post.objects.all().values()
+  template = loader.get_template('base.html')
+  context = {
+    'posts': posts,
+  }
+  return HttpResponse(template.render(context, request))
+
+
 
 

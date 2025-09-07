@@ -1,15 +1,108 @@
 <!DOCTYPE html>
-<html lang="br">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %} Criando meu primeiro </title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{% block title %}Meu Site{% endblock %}</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="""https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* 1. Tipografia e Cores Base */
+    :root {
+      --bs-primary-rgb: 86, 101, 246; /* Nova cor primária (roxo-azulado) */
+      --bs-body-font-family: 'Nunito Sans', sans-serif;
+      --bs-body-bg: #f8f9fa; /* Fundo cinza bem claro */
+    }
+
+    h1, h2, h3, h4, h5, h6, .navbar-brand, .display-5 {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* 2. Estilo do Banner (Hero) */
+    .hero { 
+      background: linear-gradient(135deg, rgba(86,101,246,1) 0%, rgba(112,68,247,1) 100%);
+      color: #fff;
+    }
+
+    /* 3. Estilo dos Cards */
+    .card {
+      border: none;
+      border-radius: 0.75rem; /* Bordas mais arredondadas */
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07); /* Sombra mais suave e moderna */
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.09);
+    }
+    
+    /* 4. Navbar com Sombra */
+    .navbar {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    /* 5. Estilos para links de ações */
+    .list-actions .list-group-item {
+      border-left: none;
+      border-right: none;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .list-actions .list-group-item:first-child {
+      border-top: none;
+    }
+    .list-actions .list-group-item:last-child {
+      border-bottom: none;
+    }
+    .list-actions a {
+      text-decoration: none;
+      font-weight: 600;
+      color: #343a40;
+    }
+    .list-actions a:hover {
+      color: #5665f6;
+    }
+    .list-actions i {
+      color: #5665f6;
+      font-size: 1.2rem;
+    }
+  </style>
 </head>
-<body>
-    <main>
-    {% block content %}
-    "Teste"
-    {% endblock %}
-    </main>
+<body class="d-flex flex-column min-vh-100">
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}">Meu Site</a>
+    <div class="d-flex gap-2 ms-auto align-items-center">
+      {% if user.is_authenticated %}
+        <a class="nav-link" href="{% url 'profile' %}">Perfil</a>
+        <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+      {% else %}
+        <a class="nav-link" href="{% url 'login' %}">Entrar</a>
+        <a class="btn btn-primary btn-sm" href="{% url 'register' %}">Cadastrar</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<main class="py-5 flex-grow-1">
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<footer class="bg-white border-top py-3 mt-auto">
+  <div class="container text-center small text-muted">
+    © {% now "Y" %} — Meu Site
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
