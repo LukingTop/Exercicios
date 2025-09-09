@@ -10,8 +10,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.template import loader
-from .models import Post
-from .models import Pessoa
+from meusite.pessoa import Pessoa
 
 def home(request):
 
@@ -145,14 +144,6 @@ def custom_403_view(request, exception=None):
 def custom_500_view(request):
 
     return render(request, '500.html', status=500)
-
-def testing(request):
-  posts = Post.objects.all().values()
-  template = loader.get_template('base.html')
-  context = {
-    'posts': posts,
-  }
-  return HttpResponse(template.render(context, request))
 
 
 
