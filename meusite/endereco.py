@@ -10,7 +10,7 @@ class Endereco(models.Model):
     cidade = models.CharField(max_length=100, verbose_name="Cidade")
     estado = models.CharField(max_length=40, verbose_name="Estado")
     cep = models.CharField(max_length=20,verbose_name="CEP")
-    Pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
+    pessoa = models.ForeignKey(Pessoa, on_delete=models.CASCADE)
 
-def __str__(self):
-    return f"{self.rua}"
+    def __str__(self):
+        return f"{self.rua}, {self.numero} - {self.bairro}"

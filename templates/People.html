@@ -19,23 +19,22 @@
         <table class="table table-striped table-hover align-middle">
           <thead class="table-light">
             <tr>
-              <th>Nome</th><th>Sobrenome</th><th>CPF</th><th>E-mail</th><th>Telefone</th><th>Data Nasc.</th><th>Bairro</th><th>Cidade</th>
+              <th>Nome</th><th>Usuário</th><th>Endereço</th>
             </tr>
           </thead>
           <tbody>
-           {% for i in pessoas %}
+           {% for p in pessoas %}
             <tr>
-              <td>{{ i.nome }}</td>
-              <td>{{ i.sobrenome }}</td>
-              <td>{{ i.cpf }}</td>
-              <td>{{ i.email|default:"-" }}</td>
-              <td>{{ i.telefone|default:"-" }}</td>
-              <td>{{ i.datadenascimento|date:"d/m/Y"|default:"-" }}</td>
-              <td>{{ i.bairro|default:"-" }}</td>
-              <td>{{ i.cidade|default:"-" }}</td>
+              <td>{{ p.nome }}</td>
+              <td>{{ p.user.username }}</td>
+              <td>
+                {% with p.endereco_set.all.0 as e %}
+                  {% if e %}{{ e.rua }}, {{ e.numero }} — {{ e.bairro }}, {{ e.cidade }}{% else %}-{% endif %}
+                {% endwith %}
+              </td>
             </tr>
             {% empty %}
-            <tr><td colspan="8" class="text-center">Nenhuma pessoa cadastrada.</td></tr>
+            <tr><td colspan="3" class="text-center">Nenhuma pessoa cadastrada.</td></tr>
             {% endfor %}
           </tbody>
         </table>

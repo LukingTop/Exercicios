@@ -13,21 +13,10 @@ from django.template import loader
 from meusite.pessoa import Pessoa
 
 def home(request):
-
     return render(request, 'index.html', {'user': request.user})
 
 def pessoas_list(request):
-    pessoas = Pessoa.objects.all()
-    for i in pessoas:
-        p_json = {  
-            "nome": i.nome,
-            "sobrenome": i.sobrenome,
-            "cpf": i.cpf,
-            "email": i.email,
-            "telefone": i.telefone,
-            "datadenascimento": i.datadenascimento,
-            "rg": i.rg,
-        }
+    pessoas = Pessoa.objects.select_related('user').prefetch_related('endereco_set').all()
     return render(request, 'People.html', {'pessoas': pessoas})
 
 def login_view(request):
