@@ -18,13 +18,22 @@ def home(request):
 
 def pessoas_list(request):
     pessoas = Pessoa.objects.all()
+    for i in pessoas:
+        p_json = {  
+            "nome": i.nome,
+            "sobrenome": i.sobrenome,
+            "cpf": i.cpf,
+            "email": i.email,
+            "telefone": i.telefone,
+            "datadenascimento": i.datadenascimento,
+            "rg": i.rg,
+        }
     return render(request, 'People.html', {'pessoas': pessoas})
 
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print(f"LOGIN TEST - username: {username!s} password: {password!s}")
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
