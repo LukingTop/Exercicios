@@ -12,6 +12,13 @@ from django.core.exceptions import PermissionDenied
 from django.template import loader
 from meusite.pessoa import Pessoa
 
+def get_user_home_name(user):
+    if user.is_superuser:
+        return 'admin_dashboard'
+    if user.groups.filter(name='Gerente').exists() or user.is_staff:
+        return 'manager_dashboard'
+    return 'user_dashboard'
+
 def home(request):
     return render(request, 'index.html', {'user': request.user})
 
@@ -26,7 +33,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect(get_user_home_name(user))
         messages.error(request, "Usuário ou senha incorretos.")
     return render(request, 'Login.html')
 
@@ -82,7 +89,7 @@ def change_password_view(request):
         request.user.save()
         update_session_auth_hash(request, request.user)
         messages.success(request, "Senha alterada com sucesso.")
-        return redirect('profile')
+        return redirect(get_user_home_name(request.user))
 
     return render(request, 'ChangePassword.html')
 
@@ -120,7 +127,7 @@ def register_view(request):
         user.save()
         login(request, user)
         messages.success(request, "Conta criada com sucesso. Você está logado.")
-        return redirect('home')
+        return redirect(get_user_home_name(user))
 
     return render(request, 'Register.html')
 
@@ -131,6 +138,22 @@ def profile_view(request):
         'user': user,
     }
     return render(request, 'Profile.html', context)
+
+@login_required(login_url='login')
+def admin_dashboard(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    return render(request, 'AdminDashboard.html')
+
+@login_required(login_url='login')
+def manager_dashboard(request):
+    if not (request.user.groups.filter(name='Gerente').exists() or request.user.is_staff):
+        raise PermissionDenied
+    return render(request, 'ManagerDashboard.html')
+
+@login_required(login_url='login')
+def user_dashboard(request):
+    return render(request, 'UserDashboard.html')
 
 def custom_404_view(request, exception):
     return render(request, '404.html', status=404)

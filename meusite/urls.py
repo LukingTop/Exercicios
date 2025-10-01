@@ -29,5 +29,8 @@ urlpatterns = [
     path('recover/', views.recover_view, name='recover'),
     path('change-password/', views.change_password_view, name='change_password'),
     path('register/', views.register_view, name='register'),
+    path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
+    path('dashboard/manager/', views.manager_dashboard, name='manager_dashboard'),
+    path('dashboard/user/', views.user_dashboard, name='user_dashboard'),
 ]
 

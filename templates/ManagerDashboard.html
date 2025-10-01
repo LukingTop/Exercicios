@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Gerente — Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background:#0d6efd;">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">MeuSite</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Perfil</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'people' %}">Pessoas</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Sair</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-5">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h3 class="card-title mb-1">Painel do Gerente</h3>
+          <p class="text-muted mb-0">Olá, {{ user.username }} — monitore e edite registros de Pessoas.</p>
+        </div>
+        <span class="badge bg-info text-dark">Gerência</span>
+      </div>
+
+      <hr/>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="row mt-3 g-3">
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Lista de Pessoas</h5>
+              <p class="card-text">Visualize e edite perfis vinculados.</p>
+              <a href="{% url 'people' %}" class="btn btn-primary btn-sm">Ir para Pessoas</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">Relatórios</h5>
+              <p class="card-text">Acesse relatórios (se disponíveis).</p>
+              <a href="#" class="btn btn-outline-primary btn-sm disabled">Relatórios</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <a class="btn btn-outline-secondary btn-sm" href="{% url 'home' %}">Voltar</a>
+        <a class="btn btn-outline-primary btn-sm" href="{% url 'profile' %}">Ver perfil</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
